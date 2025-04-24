@@ -1,9 +1,14 @@
+"use client";
+
+import { useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { SidebarTrigger } from "./ui/sidebar";
+import { SearchBox } from "./SearchBox";
 
 export default function Content({ type }: { type: string }) {
   let contentType = type.charAt(0).toUpperCase() + type.slice(1);
+
   return (
     <div className="h-full w-full mx-auto">
       <div className="h-10 w-full flex items-center">
@@ -17,10 +22,11 @@ export default function Content({ type }: { type: string }) {
           </Button>
         </div>
 
-        <div className="w-1/3 flex ml-10 gap-2">
-          <Input placeholder={`Search ${type}s`} />
-          <Button>Search</Button>
-        </div>
+        <SearchBox type={type} />
+        {/* <div className="w-1/3 flex ml-10 gap-2"> */}
+        {/*   <Input placeholder={`Search ${type}s`} onChange={handleChange} /> */}
+        {/*   <Button>Search</Button> */}
+        {/* </div> */}
       </div>
     </div>
   );
