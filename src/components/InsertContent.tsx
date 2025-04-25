@@ -25,9 +25,12 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { toast } from "sonner";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Cross, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import SelectGenre from "./SelectGenre";
+import SelectBox from "./SelectBox";
+import { GENRE, LANGUAGE } from "@/app/constants/constant";
+import { useAtomValue } from "jotai";
+import { genreAtom, languageAtom, subtitleAtom } from "@/app/atoms/atom";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -42,6 +45,9 @@ const formSchema = z.object({
 });
 
 export default function InsertContent({ type }: { type: string }) {
+  const genres = useAtomValue(genreAtom);
+  const languages = useAtomValue(languageAtom);
+  const subtitles = useAtomValue(subtitleAtom);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -147,7 +153,59 @@ export default function InsertContent({ type }: { type: string }) {
           )}
         />
 
-        <SelectGenre />
+        <div className="h-max w-1/2 flex flex-col">
+          <SelectBox items={GENRE} type="Genre" />
+          <div className="h-max w-full my-5 flex gap-1">
+            {genres &&
+              genres.map((gen) => {
+                return (
+                  <span className="h-8 w-max mx-1 px-3 py-1 rounded-md bg-white text-black flex items-center gap-2">
+                    {gen}
+                    <X
+                      size={15}
+                      className="hover:text-red-500 scale-110 transition-all duration-300 ease-in-out"
+                    />
+                  </span>
+                );
+              })}
+          </div>
+        </div>
+
+        <div className="h-max w-1/2 flex flex-col">
+          <SelectBox items={LANGUAGE} type="Language" />
+          <div className="h-max w-full my-5 flex gap-1">
+            {languages &&
+              languages.map((lang) => {
+                return (
+                  <span className="h-8 w-max mx-1 px-3 py-1 rounded-md bg-white text-black flex items-center gap-2">
+                    {lang}
+                    <X
+                      size={15}
+                      className="hover:text-red-500 scale-110 transition-all duration-300 ease-in-out"
+                    />
+                  </span>
+                );
+              })}
+          </div>
+        </div>
+
+        <div className="h-max w-1/2 flex flex-col">
+          <SelectBox items={LANGUAGE} type="Subtitles" />
+          <div className="h-max w-full my-5 flex gap-1">
+            {subtitles &&
+              subtitles.map((sub) => {
+                return (
+                  <span className="h-8 w-max mx-1 px-3 py-1 rounded-md bg-white text-black flex items-center gap-2">
+                    {sub}
+                    <X
+                      size={15}
+                      className="hover:text-red-500 scale-110 transition-all duration-300 ease-in-out"
+                    />
+                  </span>
+                );
+              })}
+          </div>
+        </div>
 
         <div className="h-max w-full flex gap-10">
           <Button
