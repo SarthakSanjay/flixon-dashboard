@@ -18,7 +18,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "./ui/textarea";
 import { Calendar } from "./ui/calendar";
-import { useState } from "react";
 import {
   Popover,
   PopoverContent,
@@ -29,7 +28,7 @@ import { CalendarIcon, Cross, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import SelectBox from "./SelectBox";
 import { GENRE, LANGUAGE } from "@/app/constants/constant";
-import { useAtomValue } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { genreAtom, languageAtom, subtitleAtom } from "@/app/atoms/atom";
 
 const formSchema = z.object({
@@ -45,9 +44,10 @@ const formSchema = z.object({
 });
 
 export default function InsertContent({ type }: { type: string }) {
-  const genres = useAtomValue(genreAtom);
-  const languages = useAtomValue(languageAtom);
-  const subtitles = useAtomValue(subtitleAtom);
+  const [genres, setGenres] = useAtom(genreAtom);
+  const [languages, setLanguages] = useAtom(languageAtom);
+  const [subtitles, setSubtitles] = useAtom(subtitleAtom);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -76,7 +76,7 @@ export default function InsertContent({ type }: { type: string }) {
       <h1 className="text-lg h-15 px-10 flex items-center">{type}</h1>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 border border-white p-10"
+        className="space-y-4 border border-white p-10"
       >
         <FormField
           control={form.control}
@@ -155,15 +155,27 @@ export default function InsertContent({ type }: { type: string }) {
 
         <div className="h-max w-1/2 flex flex-col">
           <SelectBox items={GENRE} type="Genre" />
-          <div className="h-max w-full my-5 flex gap-1">
+          <div className="h-max w-full mt-4 flex gap-1">
             {genres &&
-              genres.map((gen) => {
+              genres.map((gen, index) => {
                 return (
-                  <span className="h-8 w-max mx-1 px-3 py-1 rounded-md bg-white text-black flex items-center gap-2">
+                  <span
+                    key={gen + index}
+                    className="h-8 w-max mx-1 px-3 py-1 rounded-md bg-white text-black flex items-center gap-2"
+                  >
                     {gen}
                     <X
                       size={15}
                       className="hover:text-red-500 scale-110 transition-all duration-300 ease-in-out"
+                      onClick={() => {
+                        setGenres((prev) => {
+                          if (prev.includes(gen)) {
+                            return prev.filter((p) => p !== gen);
+                          } else {
+                            return prev;
+                          }
+                        });
+                      }}
                     />
                   </span>
                 );
@@ -173,15 +185,27 @@ export default function InsertContent({ type }: { type: string }) {
 
         <div className="h-max w-1/2 flex flex-col">
           <SelectBox items={LANGUAGE} type="Language" />
-          <div className="h-max w-full my-5 flex gap-1">
+          <div className="h-max w-full mt-4 flex gap-1">
             {languages &&
-              languages.map((lang) => {
+              languages.map((lang, index) => {
                 return (
-                  <span className="h-8 w-max mx-1 px-3 py-1 rounded-md bg-white text-black flex items-center gap-2">
+                  <span
+                    key={lang + index}
+                    className="h-8 w-max mx-1 px-3 py-1 rounded-md bg-white text-black flex items-center gap-2"
+                  >
                     {lang}
                     <X
                       size={15}
                       className="hover:text-red-500 scale-110 transition-all duration-300 ease-in-out"
+                      onClick={() => {
+                        setLanguages((prev) => {
+                          if (prev.includes(lang)) {
+                            return prev.filter((p) => p !== lang);
+                          } else {
+                            return prev;
+                          }
+                        });
+                      }}
                     />
                   </span>
                 );
@@ -191,15 +215,27 @@ export default function InsertContent({ type }: { type: string }) {
 
         <div className="h-max w-1/2 flex flex-col">
           <SelectBox items={LANGUAGE} type="Subtitles" />
-          <div className="h-max w-full my-5 flex gap-1">
+          <div className="h-max w-full mt-4 flex gap-1">
             {subtitles &&
-              subtitles.map((sub) => {
+              subtitles.map((sub, index) => {
                 return (
-                  <span className="h-8 w-max mx-1 px-3 py-1 rounded-md bg-white text-black flex items-center gap-2">
+                  <span
+                    key={sub + index}
+                    className="h-8 w-max mx-1 px-3 py-1 rounded-md bg-white text-black flex items-center gap-2"
+                  >
                     {sub}
                     <X
                       size={15}
                       className="hover:text-red-500 scale-110 transition-all duration-300 ease-in-out"
+                      onClick={() => {
+                        setSubtitles((prev) => {
+                          if (prev.includes(sub)) {
+                            return prev.filter((p) => p !== sub);
+                          } else {
+                            return prev;
+                          }
+                        });
+                      }}
                     />
                   </span>
                 );
@@ -213,17 +249,21 @@ export default function InsertContent({ type }: { type: string }) {
             variant={"ghost"}
             className="border border-green-400 hover:bg-green-400/40 hover:text-green-400 cursor-pointer"
           >
-            Submit
+            Save
           </Button>
           <Button
             variant={"ghost"}
             className="border border-blue-500 hover:bg-blue-400/40 hover:text-blue-400 cursor-pointer"
           >
-            Draft
+            Save as Draft
           </Button>
           <Button variant={"destructive"}>Cancel</Button>
         </div>
       </form>
     </Form>
   );
+}
+
+function AddMedia() {
+  return <div className=""></div>;
 }

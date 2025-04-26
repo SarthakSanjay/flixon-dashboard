@@ -10,6 +10,7 @@ import {
 import { Label } from "./ui/label";
 import { useSetAtom } from "jotai";
 import { genreAtom, languageAtom, subtitleAtom } from "@/app/atoms/atom";
+import { cn } from "@/lib/utils";
 
 export default function SelectBox({
   items,
