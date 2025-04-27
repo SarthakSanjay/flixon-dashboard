@@ -1,6 +1,6 @@
-import InsertContent from "@/components/InsertContent";
+import UploadContent from "@/components/Upload/UploadContent";
 
-export default function InsertPage({ params }: { params: any }) {
-  const { contentType } = params;
-  return <InsertContent type={contentType} />;
+export default async function InsertPage({ params }: { params: any }) {
+  const { contentType } = await params;
+  return <UploadContent type={contentType} />;
 }
