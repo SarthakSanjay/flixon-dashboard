@@ -41,15 +41,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const router = useRouter();
   return (
     <Sidebar {...props}>
-      <SidebarHeader className="bg-black">
+      <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild className="bg-black">
+            <SidebarMenuButton size="lg" asChild>
               <a href="/">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                   <LayoutDashboard className="size-4" />
                 </div>
-                <div className="flex flex-col gap-0.5 leading-none bg-black">
+                <div className="flex flex-col gap-0.5 leading-none ">
                   <span className="font-semibold">Flixon Dashboard</span>
                 </div>
               </a>
@@ -57,7 +57,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent className="bg-black">
+      <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Contents</SidebarGroupLabel>
           <SidebarGroupContent>
