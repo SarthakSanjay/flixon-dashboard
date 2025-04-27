@@ -24,12 +24,7 @@ export default function Content({ type }: { type: string }) {
             Insert New {contentType}
           </Button>
         </div>
-
         <SearchBox type={type} />
-        {/* <div className="w-1/3 flex ml-10 gap-2"> */}
-        {/*   <Input placeholder={`Search ${type}s`} onChange={handleChange} /> */}
-        {/*   <Button>Search</Button> */}
-        {/* </div> */}
       </div>
     </div>
   );
