@@ -8,21 +8,21 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
+import { useMemo } from "react";
 
 export default function SelectContainer({
   type,
   items,
-  selectedItems,
   setItems,
   form,
 }: {
   type: string;
   items: string[];
-  selectedItems: string[];
   setItems: React.Dispatch<React.SetStateAction<string[]>>;
   form: any;
 }) {
-  const getFieldName = () => {
+  // Memoized field name mapping
+  const name = useMemo(() => {
     switch (type) {
       case "Genre":
         return "genre";
@@ -33,51 +33,45 @@ export default function SelectContainer({
       default:
         return type.toLowerCase();
     }
-  };
+  }, [type]);
 
   return (
     <FormField
       control={form.control}
-      name={getFieldName()}
+      name={name}
       render={({ field }) => (
         <FormItem className="flex flex-col">
           <FormLabel>{type}</FormLabel>
           <FormControl>
-            <div className="h-max w-full flex flex-col">
+            <div className="flex flex-col">
               <SelectBox
                 items={items}
                 type={type}
                 onSelect={(item) => {
-                  if (!selectedItems.includes(item)) {
-                    const newItems = [...selectedItems, item];
-                    setItems(newItems);
-                    field.onChange(newItems);
+                  if (!field.value?.includes(item)) {
+                    const updated = [...(field.value || []), item];
+                    field.onChange(updated);
+                    setItems(updated);
                   }
                 }}
               />
-              <div className="h-max w-full mt-2 flex flex-wrap gap-1">
-                {selectedItems &&
-                  selectedItems.map((item, index) => {
-                    return (
-                      <div
-                        key={item + index}
-                        className="bg-zinc-700 px-2 py-1 rounded-sm flex items-center  group cursor-pointer"
-                        onClick={() => {
-                          const newItems = selectedItems.filter(
-                            (p) => p !== item,
-                          );
-                          setItems(newItems);
-                          field.onChange(newItems);
-                        }}
-                      >
-                        <span className="h-max text-sm">{item}</span>
-                        <X
-                          size={16}
-                          className="group-hover:text-red-400 m-0 p-0 "
-                        />
-                      </div>
-                    );
-                  })}
+              <div className="flex flex-wrap gap-1 mt-2">
+                {(field.value || []).map((item: string, index: number) => (
+                  <div
+                    key={item + index}
+                    className="bg-zinc-700 px-2 py-1 rounded-sm flex items-center group cursor-pointer"
+                    onClick={() => {
+                      const updated = field.value.filter(
+                        (p: string) => p !== item,
+                      );
+                      field.onChange(updated);
+                      setItems(updated);
+                    }}
+                  >
+                    <span className="text-sm">{item}</span>
+                    <X size={16} className="group-hover:text-red-400 ml-1" />
+                  </div>
+                ))}
               </div>
             </div>
           </FormControl>
