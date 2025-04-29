@@ -17,7 +17,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useAtom } from "jotai";
-import { selectedCastAtom } from "@/app/atoms/atom";
+import { selectedCastAtom, selectedCrewAtom } from "@/app/atoms/atom";
 import UploadCast from "./UploadCast";
 import { FormLabel } from "../ui/form";
 
@@ -30,6 +30,28 @@ export default function SelectFilmPersonnel({
 }) {
   const [open, setOpen] = React.useState(false);
   const [selectedCasts, setSelectedCasts] = useAtom(selectedCastAtom);
+  const [selectedCrews, setSelectedCrews] = useAtom(selectedCrewAtom);
+
+  function handleSelect(item: { image: string; name: string }) {
+    if (personnelType === "Casts") {
+      setSelectedCasts((p) => {
+        if (selectedCasts.includes(item)) {
+          return p;
+        } else {
+          return [...p, item];
+        }
+      });
+    } else {
+      setSelectedCrews((p) => {
+        if (selectedCrews.includes(item)) {
+          return p;
+        } else {
+          return [...p, item];
+        }
+      });
+    }
+    setOpen(false);
+  }
 
   return (
     <div className="">
@@ -59,16 +81,7 @@ export default function SelectFilmPersonnel({
                   <CommandItem
                     key={item.name + index}
                     value={item.name}
-                    onSelect={(currentname) => {
-                      setSelectedCasts((p) => {
-                        if (selectedCasts.includes(item)) {
-                          return p;
-                        } else {
-                          return [...p, item];
-                        }
-                      });
-                      setOpen(false);
-                    }}
+                    onSelect={(currentname) => handleSelect(item)}
                     className="h-10 w-full mb-1"
                   >
                     <img
