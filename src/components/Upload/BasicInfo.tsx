@@ -22,21 +22,18 @@ export default function BasicInfo({ form }: { form: any }) {
         <SelectContainer
           type="Genre"
           items={GENRE}
-          selectedItems={genres}
           setItems={setGenres}
           form={form}
         />
         <SelectContainer
           type="Language"
           items={LANGUAGE}
-          selectedItems={languages}
           setItems={setLanguages}
           form={form}
         />
         <SelectContainer
           type="Subtitles"
           items={LANGUAGE}
-          selectedItems={subtitles}
           setItems={setSubtitles}
           form={form}
         />
