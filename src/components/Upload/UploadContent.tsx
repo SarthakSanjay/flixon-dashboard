@@ -14,6 +14,8 @@ import { currentProgressAtom } from "@/app/atoms/atom";
 import { useAtom } from "jotai";
 import AddCastAndCrew from "./AddCastAndCrew";
 import { ModeToggle } from "../ModeToggle";
+import { capitalizeFirstLetter } from "@/lib/utils";
+import MediaUploads from "./MediaUploads";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -39,9 +41,30 @@ const formSchema = z.object({
 export default function UploadContent({ type }: { type: string }) {
   const [currentElement, setCurrentElement] = useState<ReactNode | null>(null);
   const [currentProgress, setCurrentProgress] = useAtom(currentProgressAtom);
+
+  // Hydrate from localStorage
+  const savedData =
+    typeof window !== "undefined"
+      ? localStorage.getItem("uploadFormData")
+      : null;
+
+  // let parsedData: Partial<FormData> | undefined = undefined;
+  let parsedData;
+
+  if (savedData) {
+    try {
+      parsedData = JSON.parse(savedData);
+      if (parsedData.releasingOn) {
+        parsedData.releasingOn = new Date(parsedData.releasingOn);
+      }
+    } catch (error) {
+      console.error("Failed to parse saved form data:", error);
+    }
+  }
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
+    defaultValues: parsedData ?? {
       username: "",
       description: "",
       releasingOn: new Date(),
@@ -51,7 +74,19 @@ export default function UploadContent({ type }: { type: string }) {
     },
   });
 
+  useEffect(() => {
+    const subscription = form.watch((value) => {
+      try {
+        localStorage.setItem("uploadFormData", JSON.stringify(value));
+      } catch (err) {
+        console.error("Failed to save form data to localStorage", err);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [form]);
+
   function onSubmit(values: z.infer<typeof formSchema>) {
+    localStorage.removeItem("uploadFormData");
     toast(<h1 className="text-green-500 text-lg">Success</h1>, {
       description: <h3 className="text-black">Movie uploaded</h3>,
     });
@@ -67,19 +102,22 @@ export default function UploadContent({ type }: { type: string }) {
       case 2:
         setCurrentElement(<AddCastAndCrew />);
         break;
+      case 3:
+        setCurrentElement(<MediaUploads type={type} />);
+        break;
       default:
         setCurrentElement(null);
     }
-  }, [currentProgress, form]);
+  }, [currentProgress, form, type]);
 
   return (
     <Form {...form}>
-      <div className="text-lg h-15 px-10 flex items-center justify-between">
-        {type} <ModeToggle />
+      <div className="text-lg h-12 border-b px-10 flex bg-white dark:bg-black sticky top-0 z-10 items-center justify-between">
+        {"Insert" + " " + capitalizeFirstLetter(type)} <ModeToggle />
       </div>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-4 border border-white px-10 py-4"
+        className="space-y-4 px-10 py-4"
       >
         <ProgressBar />
         {currentElement}
