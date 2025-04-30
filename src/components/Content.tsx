@@ -10,21 +10,16 @@ export default function Content({ type }: { type: string }) {
   const router = useRouter();
 
   return (
-    <div className="h-full w-full mx-auto">
-      <div className="h-10 w-full flex items-center">
-        <SidebarTrigger />
-      </div>
-      <div className="">
-        <div className="h-max w-full flex items-center justify-between px-10">
-          <h1 className="">{contentType}s</h1>
-          <Button
-            className=" bg-green-400 text-black hover:bg-green-700"
-            onClick={() => router.push(`/${type}/insert`)}
-          >
-            Insert New {contentType}
-          </Button>
-        </div>
+    <div className="h-full w-full mx-auto p-5">
+      <div className="w-full flex justify-between">
         <SearchBox type={type} />
+
+        <Button
+          className=" bg-green-400 text-black hover:bg-green-700"
+          onClick={() => router.push(`/${type}/insert`)}
+        >
+          Insert New {contentType}
+        </Button>
       </div>
     </div>
   );
