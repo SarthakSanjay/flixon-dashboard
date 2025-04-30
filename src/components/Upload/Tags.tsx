@@ -12,68 +12,84 @@ import {
 import { Command } from "../ui/command";
 import { useState } from "react";
 import { Input } from "../ui/input";
-import { FormLabel } from "../ui/form";
+import { FormField, FormItem, FormLabel } from "../ui/form";
 
-export default function Tags() {
+export default function Tags({ form }: { form: any }) {
   const [open, setOpen] = useState(false);
-  const [tags, setTags] = useState<string[]>([]);
   const [tag, setTag] = useState("");
 
-  const handleChange = (e: any) => {
-    if (e.target.value === "") setOpen(false);
-    setTag(e.target.value);
-  };
-
-  const handleKeyDown = (e: any) => {
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    fieldOnChange: (value: any) => void,
+    currentTags: string[],
+  ) => {
     if (e.key === "Enter") {
-      setTags((p) => [...p, tag]);
+      e.preventDefault(); // Prevent form submit
+      const newTag = tag.trim();
+      if (!newTag || currentTags.includes(newTag)) return;
+
+      const updatedTags = [...currentTags, newTag];
+      fieldOnChange(updatedTags);
       setTag("");
+      setOpen(false);
     }
   };
 
+  const handleDelete = (
+    index: number,
+    fieldOnChange: (value: any) => void,
+    currentTags: string[],
+  ) => {
+    const updatedTags = currentTags.filter((_, i) => i !== index);
+    fieldOnChange(updatedTags);
+  };
+
   return (
-    <div className="h-max w-full space-y-1">
-      <FormLabel>Tags</FormLabel>
-      <div className="w-full flex flex-wrap gap-1 ">
-        {tags &&
-          tags.map((tag, index) => {
-            return (
+    <FormField
+      control={form.control}
+      name="tags"
+      render={({ field }) => (
+        <FormItem className="h-max w-full space-y-1">
+          <FormLabel>Tags</FormLabel>
+          <div className="w-full flex flex-wrap gap-1">
+            {(field.value ?? []).map((tag: string, index: number) => (
               <div
                 key={tag + index}
-                className="bg-zinc-700 px-2 py-1 rounded-sm flex items-center  group cursor-pointer "
-                onClick={() => {
-                  setTags((p) => p.filter((t) => t !== tag));
-                }}
+                className="bg-zinc-700 px-2 py-1 rounded-sm flex items-center group cursor-pointer"
+                onClick={() => handleDelete(index, field.onChange, field.value)}
               >
-                <span className="h-max text-sm">{tag}</span>
-                <X size={16} className="group-hover:text-red-400 m-0 p-0 " />
+                <span className="text-sm">{tag}</span>
+                <X size={16} className="ml-1 group-hover:text-red-400" />
               </div>
-            );
-          })}
-      </div>
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant={"ghost"}
-            role="combobox"
-            aria-expanded={open}
-            className="min-w-[200px] max-w-2/3 justify-between text-zinc-500 cursor-pointer hover:bg-black hover:text-white border"
-          >
-            Add tags
-            <BadgePlus className="opacity-50" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-full p-0">
-          <Command>
-            <Input
-              value={tag}
-              placeholder="Enter tags"
-              onChange={handleChange}
-              onKeyDown={handleKeyDown}
-            />
-          </Command>
-        </PopoverContent>
-      </Popover>
-    </div>
+            ))}
+          </div>
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="ghost"
+                role="combobox"
+                aria-expanded={open}
+                className="min-w-[200px] max-w-2/3 justify-between text-zinc-500 cursor-pointer hover:bg-black hover:text-white border"
+              >
+                Add tags
+                <BadgePlus className="opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-full p-0">
+              <Command>
+                <Input
+                  placeholder="Enter tag"
+                  value={tag}
+                  onChange={(e) => setTag(e.target.value)}
+                  onKeyDown={(e) =>
+                    handleKeyDown(e, field.onChange, field.value ?? [])
+                  }
+                />
+              </Command>
+            </PopoverContent>
+          </Popover>
+        </FormItem>
+      )}
+    />
   );
 }
