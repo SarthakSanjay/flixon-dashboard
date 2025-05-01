@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { DialogTitle } from "@radix-ui/react-dialog";
+import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export function SearchBox({ type }: { type: string }) {
@@ -54,9 +55,9 @@ export function SearchBox({ type }: { type: string }) {
       <DialogTrigger asChild>
         <Button
           variant={"outline"}
-          className="bg-transparent text-zinc-400 w-1/3 mt-2 mx-10 hover:bg-zinc-800 hover:text-white hover:border-zinc-800 cursor-pointer"
+          className="bg-transparent text-zinc-400 w-1/3 mt-2 mx-10 hover:bg-zinc-800 hover:text-white hover:border-zinc-800 cursor-pointer flex justify-start"
         >
-          Search {type}
+          <Search /> Search {type} ...
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-black p-0">
