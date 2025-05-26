@@ -36,6 +36,9 @@ const formSchema = z.object({
   subtitleLanguages: z.array(z.string()).min(1, {
     message: "Select at least one subtitle language",
   }),
+  tags: z.array(z.string()).min(1, {
+    message: "Enter at least one tag",
+  }),
 });
 
 export default function UploadContent({ type }: { type: string }) {
@@ -71,6 +74,7 @@ export default function UploadContent({ type }: { type: string }) {
       genre: [],
       audioLanguages: [],
       subtitleLanguages: [],
+      tags: [],
     },
   });
 
@@ -112,9 +116,6 @@ export default function UploadContent({ type }: { type: string }) {
 
   return (
     <Form {...form}>
-      <div className="text-lg h-12 border-b px-10 flex bg-white dark:bg-black sticky top-0 z-10 items-center justify-between">
-        {"Insert" + " " + capitalizeFirstLetter(type)} <ModeToggle />
-      </div>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-4 px-10 py-4"
@@ -122,7 +123,7 @@ export default function UploadContent({ type }: { type: string }) {
         <ProgressBar />
         {currentElement}
 
-        <div className="h-max w-full flex gap-10">
+        <div className="h-max w-full flex gap-10 justify-center">
           <Button
             type="submit"
             variant={"ghost"}

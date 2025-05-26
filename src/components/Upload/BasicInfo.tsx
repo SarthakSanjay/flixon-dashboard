@@ -39,8 +39,8 @@ export default function BasicInfo({ form }: { form: any }) {
         />
       </div>
       <div className="h-full w-1/2 space-y-4 ">
-        <Tags />
-        <AgeRating />
+        <Tags form={form} />
+        <AgeRating form={form} />
       </div>
     </div>
   );

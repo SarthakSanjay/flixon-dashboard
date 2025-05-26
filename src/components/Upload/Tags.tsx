@@ -49,8 +49,8 @@ export default function Tags({ form }: { form: any }) {
       control={form.control}
       name="tags"
       render={({ field }) => (
-        <FormItem className="h-max w-full space-y-1">
-          <FormLabel>Tags</FormLabel>
+        <FormItem className="h-max w-full">
+          <FormLabel className="m-0 p-0">Tags</FormLabel>
           <div className="w-full flex flex-wrap gap-1">
             {(field.value ?? []).map((tag: string, index: number) => (
               <div

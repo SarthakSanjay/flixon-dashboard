@@ -8,10 +8,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Label } from "../ui/label";
 import { FormLabel } from "../ui/form";
 
-export function AgeRating() {
+export function AgeRating({ form }: { form: any }) {
   return (
     <div className="h-max w-max space-y-2">
       <FormLabel>Age Rating</FormLabel>

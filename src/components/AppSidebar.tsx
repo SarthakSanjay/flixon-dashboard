@@ -85,7 +85,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               {/* <SideItem label="Shows" icon={<Tv />} /> */}
               {/* <SideItem label="Cast & Crew" icon={<Clapperboard />} /> */}
               <SidebarMenuItem>
-                <SidebarMenuButton className="hover:bg-zinc-800">
+                <SidebarMenuButton
+                  className="hover:bg-zinc-800"
+                  onClick={() => router.push("/drafts")}
+                >
                   <DraftingCompass />
                   <span>Drafts</span>
                 </SidebarMenuButton>
